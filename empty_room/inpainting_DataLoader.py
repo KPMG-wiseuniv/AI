@@ -19,27 +19,31 @@ class Inpainting_Dataset(Dataset):
         self.using_label = using_label
 
     def __len__(self):
-        return len(self.labels)
+        return len(self.image_name)
 
     def __getitem__(self, idx):
         img = Image.open(os.path.join(self.image_root, self.image_name[idx]))
-        img = img.resize((224, 224))
+        img = img.resize((256, 256))
         img = np.array(img)/255
         img = np.transpose(img, (2, 0, 1))
         img = torch.from_numpy(img).float()
 
         if self.using_label == True:
-            mask = Image.open(os.path.join((self.mask_root, self.image_name[idx])))
+            mask = Image.open(os.path.join(self.mask_root, self.image_name[idx]))
+            mask = mask.resize((256, 256), Image.NEAREST)
             mask = np.array(mask)/255
             mask = np.transpose(mask, (2, 0, 1))
 
+            mask = torch.from_numpy(mask).float()
+
             label = Image.open(os.path.join(self.label_root, self.image_name[idx]))
+            label = label.resize((256, 256))
             label = np.array(label) / 255
             label = np.transpose(label, (2, 0, 1))
 
             label = torch.from_numpy(label).float()
 
-            return img, mask, label
+            return label, mask, img
 
         return img
 

@@ -1,12 +1,11 @@
 from torch.utils.data import DataLoader
 
-from .utils import save_ckpt, to_items
-from .evaluate import evaluate
+# from .utils import save_ckpt, to_items
 
 
 class Trainer(object):
     def __init__(self, step, config, device, model, dataset_train,
-                 dataset_val, criterion, optimizer, experiment):
+                 dataset_val, criterion, optimizer):
         self.stepped = step
         self.config = config
         self.device = device
@@ -17,8 +16,7 @@ class Trainer(object):
         self.dataset_val = dataset_val
         self.criterion = criterion
         self.optimizer = optimizer
-        self.evaluate = evaluate
-        self.experiment = experiment
+
 
     def iterate(self):
         print('Start the training')
@@ -29,24 +27,24 @@ class Trainer(object):
                 self.report(step+self.stepped, loss_dict)
 
             # evaluation
-            if (step+self.stepped + 1) % self.config.vis_interval == 0 \
-                    or step == 0 or step + self.stepped == 0:
-                # set the model to evaluation mode
-                self.model.eval()
-                self.evaluate(self.model, self.dataset_val, self.device,
-                              '{}/val_vis/{}.png'.format(self.config.ckpt,
-                                                         step+self.stepped),
-                              self.experiment)
+            # if (step+self.stepped + 1) % self.config.vis_interval == 0 \
+            #         or step == 0 or step + self.stepped == 0:
+            #     # set the model to evaluation mode
+            #     self.model.eval()
+            #     self.evaluate(self.model, self.dataset_val, self.device,
+            #                   '{}/val_vis/{}.png'.format(self.config.ckpt,
+            #                                              step+self.stepped),
+            #                   self.experiment)
 
             # save the model
-            if (step+self.stepped + 1) % self.config.save_model_interval == 0 \
-                    or (step + 1) == self.config.max_iter:
-                print('Saving the model...')
-                save_ckpt('{}/models/{}.pth'.format(self.config.ckpt,
-                                                    step+self.stepped + 1),
-                          [('model', self.model)],
-                          [('optimizer', self.optimizer)],
-                          step+self.stepped + 1)
+            # if (step+self.stepped + 1) % self.config.save_model_interval == 0 \
+            #         or (step + 1) == self.config.max_iter:
+            #     print('Saving the model...')
+            #     save_ckpt('{}/models/{}.pth'.format(self.config.ckpt,
+            #                                         step+self.stepped + 1),
+            #               [('model', self.model)],
+            #               [('optimizer', self.optimizer)],
+            #               step+self.stepped + 1)
 
             if step >= self.config.max_iter:
                 break

@@ -175,3 +175,15 @@ class PConvUNet(nn.Module):
         for name, module in self.named_modules():
             if isinstance(module, nn.BatchNorm2d) and 'enc' in name:
                 module.eval()
+
+def PUnet(pretrained=False, root=None, **kwargs):
+    """VGG 11-layer model (configuration "A")
+    Args:
+        pretrained (bool): If True, returns a model pre-trained on ImageNet
+    """
+    if pretrained:
+        kwargs['init_weights'] = False
+    model = PConvUNet(**kwargs)
+    if pretrained:
+        model.load_state_dict(torch.load(root))
+    return model

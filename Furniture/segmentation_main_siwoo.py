@@ -35,14 +35,10 @@ def mIOU(label, pred, num_classes=13):
         iou_list.append(iou_now)
     return np.mean(present_iou_list)
 
-def collate_fn(batch):
-    return tuple(zip(*batch))
-
 CLASSES = ['background', 'bottle', 'chair', 'table', 'desk', 'shelves', 'curtain', 'bed', 'lamp', 'rug', 'potted-plant', 'sofa', 'tv']
 
 list_name_to_n = dict(zip(CLASSES ,range(len(CLASSES ))))
 print(list_name_to_n)
-
 
 parser = argparse.ArgumentParser()
 

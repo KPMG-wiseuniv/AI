@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from VGG16 import VGG16
+from VGG16 import pdvgg16
 from torchvision import models
 
 
@@ -53,16 +53,28 @@ class InpaintingLoss(nn.Module):
 
 
 # The network of extracting the feature for perceptual and style loss
-class VGG16FeatureExtractor(VGG16):
+class VGG16FeatureExtractor(nn.Module):
     MEAN = [0.485, 0.456, 0.406]
     STD = [0.229, 0.224, 0.225]
 
-    def __init__(self):
-        super(VGG16).__init()
+    def __init__(self, args):
+        super().__init__()
+        vgg16 = pdvgg16(args, pretrained=False, num_classes=args.vgg16_num_classes)
         normalization = Normalization(self.MEAN, self.STD)
-        self.enc_1 = nn.Sequential(normalization, VGG16.features[:5])
-        self.enc_2 = nn.Sequential(VGG16.features[5:10])
-        self.enc_3 = nn.Sequential(VGG16.features[10:17])
+        self.enc_1 = nn.Sequential(normalization, vgg16.features[:5])
+        self.enc_2 = nn.Sequential(vgg16.features[5:10])
+        self.enc_3 = nn.Sequential(vgg16.features[10:17])
+
+        for i in range(3):
+            for param in getattr(self, 'enc_{}'.format(i+1)).parameters():
+                param.requires_grad = False
+
+    def forward(self, input):
+        feature_maps = [input]
+        for i in range(3):
+            feature_map = getattr(self, 'enc_{}'.format(i+1))(feature_maps[-1])
+            feature_maps.append(feature_map)
+        return feature_maps[1:]
 
 class Normalization(nn.Module):
     def __init__(self, mean, std):

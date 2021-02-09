@@ -3,7 +3,7 @@ import os
 import torch
 
 import torch.nn as nn
-import oyaml as yaml
+# import oyaml as yaml
 
 
 def create_ckpt_dir():
@@ -23,17 +23,17 @@ def _to_item(item):
     return item[0], item[1].item()
 
 
-class Config(dict):
-    def __init__(self, conf_file):
-        with open(conf_file, "r") as f:
-            config = yaml.safe_load(f)
-        self._conf = config
-
-    def __getattr__(self, name):
-        if self._conf.get(name) is None:
-            return None
-
-        return self._conf[name]
+# class Config(dict):
+#     def __init__(self, conf_file):
+#         with open(conf_file, "r") as f:
+#             config = yaml.safe_load(f)
+#         self._conf = config
+#
+#     def __getattr__(self, name):
+#         if self._conf.get(name) is None:
+#             return None
+#
+#         return self._conf[name]
 
 
 def conf_to_param(config: dict) -> dict:
