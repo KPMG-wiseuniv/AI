@@ -7,7 +7,7 @@ COVID-19가 전 세계적인 영향을 미치며, 자유로운 외부 활동이 
 
 국내외 가구 브랜드에서는 AR, VR 등 다양한 기술을 접목한 홈 스타일링 서비스를 선보이고 있지만, 여전히 공간 전반을 아우르는 홈 스타일링 서비스를 제공받기 위해서는 매장을 방문해야 한다는 치명적인 단점이 존재하는 상황입니다.
 
-이에 저희 팀은 모바일 홈 스타일링 솔루션 ‘Fitting Room’을 제공하고자 합니다. 서비스에 관한 자세한 내용은 APP Repositories의 Readme에 정리하였으며, 다음의 URL을 통해 확인해주시면 감사하겠습니다.
+이에 저희 팀은 모바일 홈 스타일링 솔루션 ‘Fitting Room’을 제공하고자 합니다. 서비스에 관한 자세한 내용은 "APP Repositories"의 Readme에 정리하였으며, 다음의 URL을 통해 확인해주시면 감사하겠습니다.
 
 ## About Service (URL)
 https://github.com/KPMG-wiseuniv/App/blob/main/README.md
