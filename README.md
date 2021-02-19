@@ -16,7 +16,7 @@ https://github.com/KPMG-wiseuniv/App/blob/main/README.md
 
 ## 모델 설명
 ### 1-1 segmentation
-<p align="center"><img src="deeplab3_paper.png" alt="outline" width="90%"></p>
+![deeplab_v3](./deeplab3_paper.PNG)
 
 Rethinking Atrous Convolution for Semantic Image Segmentation,
 Liang-Chieh Chen, George Papandreou, Florian Schroff, Hartwig Adam,
@@ -27,7 +27,7 @@ Liang-Chieh Chen, George Papandreou, Florian Schroff, Hartwig Adam,
 
 
 ### 1-3 fr model(recommendation)
-<p align="center"><img src="mobilenet_final.png" alt="outline" width="90%"></p>
+![MobileNet_v3](./mobilenet_final.PNG)
 
 
 ## 사용한 기법 설명
