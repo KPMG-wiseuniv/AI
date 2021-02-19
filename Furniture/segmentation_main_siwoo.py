@@ -47,13 +47,12 @@ parser.add_argument("--num_epochs", default='50', type=int)
 parser.add_argument("--resize_w", default='320', type=int)
 parser.add_argument("--resize_h", default='320', type=int)
 
-# parser.add_argument("--lr", default='0.000005', type=float)
 parser.add_argument("--lr", default='0.0001', type=float)
 parser.add_argument("--num_classes", default='13', type=int)
 parser.add_argument("--batch_size", default='16', type=int)
 parser.add_argument("--model_load", default=59, type=int)
-parser.add_argument("--train", default=False, type=bool)
-# parser.add_argument("--k", default='10', type=int, help='cross validation')
+parser.add_argument("--train", default=True, type=bool)
+
 
 args = parser.parse_args()
 
@@ -61,7 +60,7 @@ device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cp
 model = torchvision.models.segmentation.deeplabv3_resnet50(pretrained=False, num_classes=args.num_classes)
 if args.model_load != 0:
     mdoel = model.load_state_dict(torch.load('/home/siwoo/Desktop/kpmg_image/Furniture/seg_model_siwoo/segmentation_model_pre_train'+str(args.model_load)+'.pth'))
-
+model.eval()
 model.to(device)
 
 optimizer = torch.optim.Adam(model.parameters(), lr = args.lr)
@@ -78,8 +77,7 @@ if args.train == True:
     for epoch in range(args.num_epochs):
         m_iou = []
         losses = []
-        # step = 0
-        # global_step = int(len(train_dataset)/args.batch_size)+1
+
         for img, mask in train_dataloader:
             img = img.to(device)
             mask = mask.to(device)
@@ -99,14 +97,14 @@ if args.train == True:
 
         print('epoch: {}/{}, loss: {}, iou: {}'.format(epoch+1, args.num_epochs, sum(losses)/int(len(train_dataset)/args.batch_size), sum(m_iou)/int(len(train_dataset)/args.batch_size)))
         torch.save(model.state_dict(), '/home/siwoo/Desktop/kpmg_image/Furniture/seg_model_siwoo/segmentation_model_pre_train'+str(args.model_load+epoch+1)+'.pth')
-
 if args.train == False:
     with torch.no_grad():
         model.eval()
 
         model.load_state_dict(torch.load('/home/siwoo/Desktop/kpmg_image/Furniture/seg_model_siwoo/segmentation_model'+str(args.model_load)+'.pth'))
-        for img, mask in val_dataloader:
+        for img,mask in val_dataloader:
             img = img.to(device)
+            print(img.shape)
 
             output=model(img)['out']
 
@@ -130,6 +128,3 @@ if args.train == False:
             plt.yticks([])
 
             plt.show()
-
-            # plt.imshow(np.squeeze(np.argmax(output.detach().cpu().numpy(), 1)))
-            # plt.show()
