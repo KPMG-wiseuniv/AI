@@ -16,21 +16,60 @@ https://github.com/KPMG-wiseuniv/App/blob/main/README.md
 
 ## 모델 설명
 ### 1-1 segmentation
-![deeplab_v3](./deeplab3_paper.PNG)
+원하는 인테리어 속에서 추천하고자 하는 가구를 삭제하기 위해 DeepLab V3를 이용하여 Segmentation을 진행하였습니다.
 
+![deeplab_v3](./deeplab3_paper.PNG)
 Rethinking Atrous Convolution for Semantic Image Segmentation,
 Liang-Chieh Chen, George Papandreou, Florian Schroff, Hartwig Adam,
 ,2017_arXiv
 [[paper]](https://arxiv.org/abs/1706.05587)
 
+데이터는 NYU V2 이미지와 PascalVOC2012에서 가구 이미지가 있는 것을 골라 학습에 사용하였습니다. 
+
+![example]()
+
 ### 1-2 inpainting
+저희는 지워진 가구의 위치에 inpainting을 하기 위해 아래의 논문을 이용하여 학습을 진행하였습니다.
+
+![partial_convolution](./partial_convolution_layer.png)
+Image Inpainting for Irregular Holes Using Partial Convolutions, Guilin Liu, Fitsum A. Reda, Kevin J. Shih, Ting-Chun Wang, Andrew Tao, Bryan Catanzaro
+, 2018_arXiv
+[[paper]](https://arxiv.org/abs/1804.07723)
+
+이미지 전체에 비해 가구가 차지하는 영역이 크지 않으며, 비어있는 방 이미지에서의 variance가 크지 않았기 때문에 Non-learning Based 
+Model인 해당 모델을 이용하였습니다. 비록 computing cost가 매우 크기 때문에 real time으로 정보를 얻어내는 것이 불가능하다는 단점이 
+있지만 저희는 학습하기 전의 단계에서 preprocessing을 거치는 것이기 때문에 괜찮다고 판단하였습니다. 
+
+![example]()
+
+저희는 빈방 이미지에서 랜덤한 box를 생성하여 마스크로 사용하여 해당 모델을 학습하였습니다. 기존의 논문에서는 Partial Conv를 이용한 VGG모델을 
+ImageNet 데이터를 이용해 Pretraining한 후, Loss를 계산하였습니다. 하지만 저희는 빈 방 이미지를 먼저 VGG Network로 학습한 후 Inpainting Model을
+학습하였습니다. 
+
 
 
 ### 1-3 fr model(recommendation)
+Resnet이나 Inception 모델에서 Feature Extraction을 통한 Transfer Learning을 진행하려고 했으나 모델의 크기가 무거워진다는 단점이 있었기 때문에 Mobilenet을 통해 학습을 진행하였습니다. 
+
 ![MobileNet_v3](./mobilenet_final.PNG)
 
+Backbone으로는 MobileNet v3를 이용하였으며 추천하기 위한 카테고리를 총 4개지로 나누어 4개의 Linear Layer를 학습하였습니다. 학습을 위해 
+Adam Optimizer와 Cross Enrtropy Loss를 이용하였으며, 4개의 Linear Layer에서 나온 Loss를 사용하였습니다.
 
-## 사용한 기법 설명
+![interior_img]()
 
+학습에 사용된 이미지가 매우 적었으며, Imbalance한 경우가 많았기 때문에 Oversampling과 Augmentation을 사용하였습니다. 
+적은 수의 데이터를 랜덤하게 추가하여 해당 class의 데이터 수를 같도록 하였으며, RandomAffine, RandomRotation, RandomVerticalFlip 등의 Augmentation을
+이용하였습니다.
 
 ## dataset소개
+### 1-1 segmentation
+NYU V2 이미지의 경우 depth정보를 제거하고, Image와 Segmentation Mask 정보만을 이용하였습니다. Pascal VOC2012의 경우
+사람이 포함되지 않은 Easy Data만을 이용하여 학습을 진행하였습니다. 해당 이미지를 parsing하기 위해 ./NYU_V2/NYU_V2_DataLoader.py를
+사용하였습니다. 
+
+### 1-2 inpainting
+빈 방이 이미지를 얻기 위해 크롤링하였습니다. 해당 코드는 ./Furniture/crawling code.py를 응용하여 사용하였습니다.
+
+### 1-3 fr model(recommendation)
+해당 이미지 역시 크롤링하여 사용하였습니다. 해당 코드는 ./Furniture/crawling code.py를 사용하였습니다.
