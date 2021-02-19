@@ -13,3 +13,24 @@ COVID-19가 전 세계적인 영향을 미치며, 자유로운 외부 활동이 
 
 ## About Service (URL)
 https://github.com/KPMG-wiseuniv/App/blob/main/README.md
+
+## 모델 설명
+### 1-1 segmentation
+<p align="center"><img src="deeplab3_paper.png" alt="outline" width="90%"></p>
+
+Rethinking Atrous Convolution for Semantic Image Segmentation,
+Liang-Chieh Chen, George Papandreou, Florian Schroff, Hartwig Adam,
+,2017_arXiv
+[[paper]](https://arxiv.org/abs/1706.05587)
+
+### 1-2 inpainting
+
+
+### 1-3 fr model(recommendation)
+<p align="center"><img src="mobilenet_final.png" alt="outline" width="90%"></p>
+
+
+## 사용한 기법 설명
+
+
+## dataset소개
