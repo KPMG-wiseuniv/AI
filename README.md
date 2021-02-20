@@ -51,7 +51,7 @@ ImageNet 데이터를 이용해 Pretraining한 후, Loss를 계산하였습니�
 ### 1-3 fr model(recommendation)
 Resnet이나 Inception 모델에서 Feature Extraction을 통한 Transfer Learning을 진행하려고 했으나 모델의 크기가 무거워진다는 단점이 있었기 때문에 Mobilenet을 통해 학습을 진행하였습니다. 
 
-![MobileNet_v3](./mobilenet_final.PNG)
+![MobileNet_v3](./fr_model.PNG)
 
 Backbone으로는 MobileNet v3를 이용하였으며 추천하기 위한 카테고리를 총 4개지로 나누어 4개의 Linear Layer를 학습하였습니다. 학습을 위해 
 Adam Optimizer와 Cross Enrtropy Loss를 이용하였으며, 4개의 Linear Layer에서 나온 Loss를 사용하였습니다.
