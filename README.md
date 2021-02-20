@@ -27,7 +27,8 @@ Liang-Chieh Chen, George Papandreou, Florian Schroff, Hartwig Adam,
 
 데이터는 NYU V2 이미지와 PascalVOC2012에서 가구 이미지가 있는 것을 골라 학습에 사용하였습니다. 
 
-![example]()
+![example](./modern_chair_3325_image.png)
+![segmentation_mask](./modern_chair_3325.png)
 
 ### 1-2 inpainting
 저희는 지워진 가구의 위치에 inpainting을 하기 위해 아래의 논문을 이용하여 학습을 진행하였습니다.
