@@ -75,3 +75,16 @@ NYU V2 이미지의 경우 depth정보를 제거하고, Image와 Segmentation Ma
 
 ### 1-3 fr model(recommendation)
 해당 이미지 역시 크롤링하여 사용하였습니다. 해당 코드는 ./Furniture/crawling code.py를 사용하였습니다.
+
+### 사용한 버전 및 모듈 소개
+torch (1.7.1)
+
+torchvision (0.8.2)
+
+Pillow (8.1.0)
+
+h5py (3.1.0)
+
+torchvision (0.8.2)
+
+typing-extensions (3.7.4.3)
