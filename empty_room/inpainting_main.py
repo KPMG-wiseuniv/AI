@@ -1,15 +1,9 @@
 import argparse
-import os
-import torch
-import torch.nn as nn
 from model import PConvUNet
 from loss import *
-from train import Trainer
 from train_vgg16 import train_vgg16
 from inpainting_DataLoader import *
 from torch.utils.data import DataLoader
-
-from unet import UNet
 
 parser = argparse.ArgumentParser()
 
@@ -28,10 +22,10 @@ parser.add_argument("--vgg16_num_channels", default = 3, type= int)
 parser.add_argument("--vgg16_num_classes", default = 2, type= int)
 
 # PUnet
-parser.add_argument("--batch_size", default=8, type=int)
-parser.add_argument("--num_epoch", default=100, type=int)
-parser.add_argument("--initial_lr", default=0.0002, type=float)
-parser.add_argument("--finetune_lr", default=0.0005, type=float)
+parser.add_argument("--batch_size", default=1, type=int)
+parser.add_argument("--num_epoch", default=1000, type=int)
+# parser.add_argument("--initial_lr", default=0.0002, type=float)
+parser.add_argument("--finetune_lr", default=0.00005, type=float)
 parser.add_argument("--weight_decay", default = 0, type= int)
 
 parser.add_argument("--valid_coef", default=1.0, type=float)
@@ -42,18 +36,16 @@ parser.add_argument("--style_coef", default=120.0, type=float)
 parser.add_argument("--tv_loss", default='mean', type=str)
 
 # load model
-parser.add_argument("--start_iter", default=100, type=int)
+parser.add_argument("--start_iter", default=0, type=int)
 
 # save root
 parser.add_argument("--mask_out_dir", default = '/home/siwoo/Desktop/kpmg_image/empty_room/mask', type= str)
 parser.add_argument("--model_out_dir", default= '/home/siwoo/Desktop/kpmg_image/empty_room/model', type= str)
-parser.add_argument("--start_number", default= 100, type=int)
 
 # pass
 parser.add_argument("--train_vgg16", default= False, type=bool)
-parser.add_argument("--make_mask", default= True, type=bool)
+parser.add_argument("--make_mask", default= False, type=bool)
 parser.add_argument("--train", default= True, type=bool)
-# parser.add_argument("--train", default= False, type=bool)
 
 
 args = parser.parse_args()
@@ -73,10 +65,12 @@ if args.make_mask == True:
 
 dataset = Inpainting_Dataset(args.img_root, args.mask_root, args.label_root)
 dataloader = DataLoader(dataset, batch_size=args.batch_size, shuffle=True, drop_last=True)
+test_dataloader = DataLoader(dataset, batch_size=1)
 
 # model = UNet(3,3)
 model = PConvUNet(finetune=False, layer_size=7)
-model.load_state_dict(torch.load(os.path.join('/home/siwoo/Desktop/kpmg_image/empty_room/model/inpainting_'+str(args.start_iter)+'.pth')))
+if args.start_iter != 0:
+    model.load_state_dict(torch.load(os.path.join('/home/siwoo/Desktop/kpmg_image/empty_room/model/inpainting_'+str(args.start_iter)+'.pth')))
 model.to(device)
 
 
@@ -107,7 +101,7 @@ if args.train == True:
 
         print('epoch: {}/{} loss: {}'.format(epoch+1, args.num_epoch, sum(total_loss)/len(total_loss)))
 
-    torch.save(model.state_dict(), '/home/siwoo/Desktop/kpmg_image/empty_room/model/inpainting_'+str(args.start_iter+args.num_epoch)+'.pth')
+        torch.save(model.state_dict(), '/home/siwoo/Desktop/kpmg_image/empty_room/model/inpainting_'+str(args.start_iter+args.num_epoch)+'.pth')
 
 
 if args.train == False:
@@ -115,11 +109,14 @@ if args.train == False:
         model.eval()
         model.load_state_dict(torch.load(os.path.join('/home/siwoo/Desktop/kpmg_image/empty_room/model/inpainting_'+str(args.start_iter)+'.pth')))
 
-        for iter, (label, mask, img) in enumerate(dataloader):
+        for iter, (label, mask, img) in enumerate(test_dataloader):
             label = label.to(device)
             mask = mask.to(device)
             img = img.to(device)
 
             output, _ = model(label, mask)
-            plt.imshow(np.transpose(output[0].detach().cpu().numpy(), (1, 2, 0)))
-            plt.show()
+            mask = np.transpose(output[0].detach().cpu().numpy(), (1, 2, 0))
+            mask = mask*255
+            mask = mask.astype(np.uint8)
+            mask = Image.fromarray(mask)
+            mask.save(os.path.join(args.mask_out_dir, str(iter)+'.png'))

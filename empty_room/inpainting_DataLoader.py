@@ -22,7 +22,7 @@ class Inpainting_Dataset(Dataset):
         return len(self.image_name)
 
     def __getitem__(self, idx):
-        img = Image.open(os.path.join(self.image_root, self.image_name[idx]))
+        img = Image.open(os.path.join(self.image_root, self.image_name[idx])).convert('RGB')
         img = img.resize((256, 256))
         img = np.array(img)/255
         img = np.transpose(img, (2, 0, 1))
@@ -56,17 +56,12 @@ def make_mask(dataloader, model, label_root, out_dir):
         pred = np.squeeze(pred)
         pred = np.transpose(pred,(1, 2, 0))
         pred = pred.astype(np.uint8)
-        # for i in range(pred.shape[0]):
-        #     for j in range(pred.shape[1]):
-        #         if pred[i][j] == 0:
-        #             pred[i][j] = 255
-        #         else:
-        #             pred[i][j] = 0
+
         mask = Image.fromarray(pred)
         mask.save(os.path.join(out_dir, labels[iter]))
 
 def make_label(image_name,image_dir, mask_dir, label_dir, w=None, h=None):
-    img = Image.open(os.path.join(image_dir, image_name))
+    img = Image.open(os.path.join(image_dir, image_name)).convert('RGB')
     img = np.array(img)
     if w == None and h == None:
         h, w, c = np.array(img).shape
@@ -84,7 +79,6 @@ def make_label(image_name,image_dir, mask_dir, label_dir, w=None, h=None):
 
     mask = np.zeros((h, w, c), dtype=np.uint8)+1
     mask[x[0]:x[1], y[0]:y[1], :]=0
-
     label=img*mask
 
     mask = Image.fromarray(mask*255)

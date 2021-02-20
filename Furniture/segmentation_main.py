@@ -43,14 +43,14 @@ print(list_name_to_n)
 parser = argparse.ArgumentParser()
 
 parser.add_argument("--root", default='/home/siwoo/Desktop/kpmg_image/Furniture', type=str)
-parser.add_argument("--num_epochs", default='50', type=int)
+parser.add_argument("--num_epochs", default='200', type=int)
 parser.add_argument("--resize_w", default='320', type=int)
 parser.add_argument("--resize_h", default='320', type=int)
 
 parser.add_argument("--lr", default='0.0001', type=float)
 parser.add_argument("--num_classes", default='13', type=int)
 parser.add_argument("--batch_size", default='16', type=int)
-parser.add_argument("--model_load", default=59, type=int)
+parser.add_argument("--model_load", default=0, type=int)
 parser.add_argument("--train", default=True, type=bool)
 
 
