@@ -19,6 +19,7 @@ https://github.com/KPMG-wiseuniv/App/blob/main/README.md
 원하는 인테리어 속에서 추천하고자 하는 가구를 삭제하기 위해 DeepLab V3를 이용하여 Segmentation을 진행하였습니다.
 
 ![deeplab_v3](./deeplab3_paper.PNG)
+
 Rethinking Atrous Convolution for Semantic Image Segmentation,
 Liang-Chieh Chen, George Papandreou, Florian Schroff, Hartwig Adam,
 ,2017_arXiv
