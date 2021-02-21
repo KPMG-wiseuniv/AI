@@ -107,3 +107,5 @@ h5py (3.1.0)
 torchvision (0.8.2)
 
 typing-extensions (3.7.4.3)
+
+opencv-python (4.5.1.48)
