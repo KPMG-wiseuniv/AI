@@ -50,7 +50,9 @@ Model인 해당 모델을 이용하였습니다. 비록 computing cost가 매우
 ImageNet 데이터를 이용해 Pretraining한 후, Loss를 계산하였습니다. 하지만 저희는 빈 방 이미지를 먼저 VGG Network로 학습한 후 Inpainting Model을
 학습하였습니다. 
 
-![example]()
+![example](modern_chair_3325_image.png)
+![segmentation_mask](modern_chair_3325.png)
+![example](modern_chair_3325_cv2_inpainting.png)
 
 이미지의 결과가 좋지 않은 경우에는 opencv의 cv2.INPAINT_TELEA 함수를 이용하여 학습에 사용하였습니다. 경계부분에서 내부 영역을 향해 점진적으로
 점을 채우는 방법으로 주위의 픽셀값에 가중치합을 계산하여 마스크의 픽셀값을 복원합니다. 저희는 가중치의 값을 3으로 하여 실행하였습니다. 해당 코드는
